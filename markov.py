@@ -32,27 +32,27 @@ def make_chains(text_string):
         tup = (words[index], words[index + 1])
        
         if chains.get(tup):
-            # chains[tup] += [words[index + 2]]
             chains[tup].append(words[index + 2])
-            
         else:
             chains[tup] = [words[index + 2]]
 
-    # print chains
     return chains
 
 
 def make_text(chains):
     """Takes dictionary of markov chains; returns random text."""
 
-    text = ""
+    tup = choice(chains.keys())
+    text = [tup[0], tup[1]]
 
-    # your code goes here
+    while chains.get(tup):
+        new_word = choice(chains[tup])
+        tup = (tup[1], new_word)
+        text.append(new_word)
 
-    return text
+    return " ".join(text)
 
-
-input_path = "green-eggs.txt"
+input_path = "gettysburg.txt"
 
 # Open the file and turn it into one long string
 input_text = open_and_read_file(input_path)
