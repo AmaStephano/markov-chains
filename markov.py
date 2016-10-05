@@ -94,8 +94,9 @@ def make_text(chains, max_words):
     #     else:
     #         text = text[:-1]
 
+    # Goes through list in backward direction to find last instance of punctuation
     for index, word in reversed(list(enumerate(text))):
-        if word[-1] in (".", "?", "!") or word[-2:] == ".\"":
+        if word[-1] in (".", "?", "!") or word[-2:] in (".\"", "?\"", "!\""):
             return " ".join(text[:index + 1])
             
 
