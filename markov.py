@@ -53,7 +53,7 @@ def make_chains(text_string, n):
     return chains
 
 
-def make_text(chains):
+def make_text(chains, max_words):
     """Takes dictionary of markov chains; returns random text."""
 
     # tup = choice(chains.keys())
@@ -75,15 +75,30 @@ def make_text(chains):
     # for word in tup:
     #     text.append(word)
 
-    while chains.get(tup):
-        new_word = choice(chains[tup])
+    # while chains.get(tup):
+    #     new_word = choice(chains[tup])
 
         # can slice tuples. Don't need a list to do this
         # then adding new word to the slice
+        # tup = tup[1:] + (new_word,)
+        # text.append(new_word)
+        
+    while len(text) < max_words:
+        new_word = choice(chains[tup])
         tup = tup[1:] + (new_word,)
         text.append(new_word)
-    
-    return " ".join(text)
+
+    # while True:
+    #     if text[-1][-1] in (".", "?", "!"):
+    #        return " ".join(text)
+    #     else:
+    #         text = text[:-1]
+
+    for index, word in reversed(list(enumerate(text))):
+        if word[-1] in (".", "?", "!") or word[-2:] == ".\"":
+            return " ".join(text[:index + 1])
+            
+
 
 input_path = sys.argv[1]
 
@@ -91,9 +106,9 @@ input_path = sys.argv[1]
 input_text = open_and_read_file(input_path)
 
 # Get a Markov chain
-chains = make_chains(input_text, 8)
+chains = make_chains(input_text, 2)
 
 # Produce random text
-random_text = make_text(chains)
+random_text = make_text(chains, 100)
 
 print random_text
