@@ -56,8 +56,20 @@ def make_chains(text_string, n):
 def make_text(chains):
     """Takes dictionary of markov chains; returns random text."""
 
-    tup = choice(chains.keys())
+    # tup = choice(chains.keys())
+    # first_letter = tup[0][0]
+
+    # while not first_letter.isupper():
+    #     tup = choice(chains.keys())
+    #     first_letter = tup[0][0]
+
+    #Could use istitle() instead on the whole word
+    #or could do a list comprehension of all keys with first letter captalized
+    capital_keys = [key for key in chains.keys() if key[0].istitle()]
+    tup = choice(capital_keys)
+
     text = list(tup)
+
 
     # text = []
     # for word in tup:
@@ -65,6 +77,9 @@ def make_text(chains):
 
     while chains.get(tup):
         new_word = choice(chains[tup])
+
+        # can slice tuples. Don't need a list to do this
+        # then adding new word to the slice
         tup = tup[1:] + (new_word,)
         text.append(new_word)
     
