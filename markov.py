@@ -14,7 +14,7 @@ def open_and_read_file(file_path):
         return file_to_string.read()
 
 
-def make_chains(text_string):
+def make_chains(text_string, n):
     """Takes input text as string; returns _dictionary_ of markov chains.
 
     A chain will be a key that consists of a tuple of (word1, word2)
@@ -29,14 +29,27 @@ def make_chains(text_string):
     words = text_string.split()
     chains = {}
 
-    for index in range(len(words)-2):
-        tup = (words[index], words[index + 1])
-       
-        if chains.get(tup):
-            chains[tup].append(words[index + 2])
-        else:
-            chains[tup] = [words[index + 2]]
+    for index in range(len(words) - n):
 
+        # temp_list = []
+        # for number in range(n):
+        #     temp_list.append(words[index + number])
+        # OR
+        # temp_list = words[index:index+n]
+        #
+        # THEN
+        # tup = tuple(temp_list)
+
+        tup = tuple(words[index:index + n])
+
+        # if chains.get(tup):
+        #     chains[tup].append(words[index + n])
+        # else:
+        #     chains[tup] = [words[index + n]]
+
+        chains.setdefault(tup, []).append(words[index + n])
+
+    # print chains        
     return chains
 
 
@@ -44,13 +57,17 @@ def make_text(chains):
     """Takes dictionary of markov chains; returns random text."""
 
     tup = choice(chains.keys())
-    text = [tup[0], tup[1]]
+    text = list(tup)
+
+    # text = []
+    # for word in tup:
+    #     text.append(word)
 
     while chains.get(tup):
         new_word = choice(chains[tup])
-        tup = (tup[1], new_word)
+        tup = tup[1:] + (new_word,)
         text.append(new_word)
-
+    
     return " ".join(text)
 
 input_path = sys.argv[1]
@@ -59,7 +76,7 @@ input_path = sys.argv[1]
 input_text = open_and_read_file(input_path)
 
 # Get a Markov chain
-chains = make_chains(input_text)
+chains = make_chains(input_text, 8)
 
 # Produce random text
 random_text = make_text(chains)
